@@ -15,7 +15,7 @@ function BrandIcon(): React.ReactElement {
 }
 
 export default function TopBar(): React.ReactElement {
-  const { loadSVGString, downloadSVG, showConfirm, DEFAULT_SVG } = useEditor()
+  const { loadSVGString, downloadSVG, showConfirm, DEFAULT_SVG, openGifModal } = useEditor()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -67,6 +67,13 @@ export default function TopBar(): React.ReactElement {
           Nuevo
         </button>
         <div className="topbar-sep" />
+        <button className="btn btn-ghost" onClick={openGifModal}>
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+            <rect x="1.5" y="3.5" width="11" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.3"/>
+            <path d="M3.7 6v2M3.7 6h1.1a.7.7 0 0 1 0 1.4H3.9M6.3 8V6h1.3M6.3 7.1h1M9 6v2M9 6h1.3" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          Exportar GIF
+        </button>
         <button className="btn btn-primary" onClick={downloadSVG}>
           <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
             <path d="M7 2v7.5M7 9.5l-3-3M7 9.5l3-3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>

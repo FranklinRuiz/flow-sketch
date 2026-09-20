@@ -5,6 +5,7 @@ import TreePanel from './components/TreePanel.tsx'
 import PreviewPanel from './components/PreviewPanel.tsx'
 import InspectorPanel from './components/InspectorPanel.tsx'
 import Modal from './components/Modal.tsx'
+import GifExportModal from './components/GifExportModal.tsx'
 
 export default function App(): React.ReactElement {
   return (
@@ -16,6 +17,7 @@ export default function App(): React.ReactElement {
         <InspectorPanel />
       </div>
       <Modal />
+      <GifExportModal />
     </EditorProvider>
   )
 }

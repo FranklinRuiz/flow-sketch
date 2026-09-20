@@ -54,6 +54,9 @@ export interface EditorContextType {
   fitZoom:              () => void
   addDashAnimation:     (from: string, to: string, dur: string) => void
   removeDashAnimation:  () => void
+  gifModalOpen:         boolean
+  openGifModal:         () => void
+  closeGifModal:        () => void
   DEFAULT_SVG:          string
   serializeSVG:         (node: Node) => string
 }
@@ -85,6 +88,7 @@ export function EditorProvider({ children }: { readonly children: ReactNode }): 
   const [modal,         setModal]         = useState<ModalState | null>(null)
   const [treeVersion,      setTreeVersion]      = useState(0)
   const [selectionVersion, setSelectionVersion] = useState(0)
+  const [gifModalOpen,     setGifModalOpen]     = useState(false)
 
   // ── Modal ──────────────────────────────────────────────────────────────────
   const showAlert   = useCallback((msg: string) => setModal({ type: 'alert',   message: msg }), [])
@@ -309,6 +313,10 @@ export function EditorProvider({ children }: { readonly children: ReactNode }): 
     URL.revokeObjectURL(url)
   }, [])
 
+  // ── Exportación GIF ────────────────────────────────────────────────────────
+  const openGifModal  = useCallback(() => setGifModalOpen(true),  [])
+  const closeGifModal = useCallback(() => setGifModalOpen(false), [])
+
   // ── Valor del contexto — memoizado para evitar re-renders innecesarios ────
   const value = useMemo<EditorContextType>(() => ({
     svgHostRef,
@@ -340,6 +348,9 @@ export function EditorProvider({ children }: { readonly children: ReactNode }): 
     fitZoom,
     addDashAnimation,
     removeDashAnimation,
+    gifModalOpen,
+    openGifModal,
+    closeGifModal,
     DEFAULT_SVG,
     serializeSVG,
   }), [
@@ -348,6 +359,7 @@ export function EditorProvider({ children }: { readonly children: ReactNode }): 
     selectNode, clearSelection, updateHighlight, setAttrOnSelected, removeAttrFromSelected,
     addAttrToSelected, applyRawXML, deleteSelected, downloadSVG,
     zoomIn, zoomOut, fitZoom, addDashAnimation, removeDashAnimation,
+    gifModalOpen, openGifModal, closeGifModal,
   ])
 
   return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>

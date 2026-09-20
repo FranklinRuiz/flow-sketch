@@ -780,6 +780,80 @@ dialog.modal-overlay::backdrop {
 .modal-actions { display: flex; justify-content: flex-end; gap: var(--sp-2); }
 
 /* ============================================================
+   EXPORTAR GIF
+   ============================================================ */
+.gif-modal-box { width: min(380px, 90vw); }
+.gif-modal-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: var(--sp-4);
+}
+.gif-modal-warning {
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--text-dim);
+  background: var(--panel-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: var(--sp-2) var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+.gif-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-3);
+}
+.gif-field label {
+  display: block;
+  font-size: 9.5px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  margin-bottom: var(--sp-1);
+  font-family: var(--mono);
+}
+.gif-field input {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 5px var(--sp-2);
+  border-radius: var(--radius-sm);
+  font-family: var(--mono);
+  font-size: 12px;
+  transition: border-color var(--t-base), background var(--t-base), box-shadow var(--t-base);
+}
+.gif-field input:hover  { border-color: var(--border-hover); }
+.gif-field input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--panel-2);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.gif-field input:disabled { opacity: .5; cursor: not-allowed; }
+.gif-hint {
+  font-size: 11px;
+  color: var(--text-faint);
+  line-height: 1.5;
+  margin-bottom: var(--sp-4);
+}
+.gif-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--panel-2);
+  border: 1px solid var(--border-soft);
+  overflow: hidden;
+  margin-bottom: var(--sp-4);
+}
+.gif-progress-bar {
+  height: 100%;
+  background: var(--accent);
+  transition: width var(--t-fast);
+}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 880px) {
