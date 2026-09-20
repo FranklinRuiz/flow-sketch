@@ -41,6 +41,7 @@ export interface EditorContextType {
   loadSVGString:        (text: string) => void
   mountSVG:             (svgEl: Element) => void
   selectNode:           (node: Element) => void
+  clearSelection:       () => void
   updateHighlight:      (node: Element) => void
   setAttrOnSelected:    (name: string, value: string) => void
   removeAttrFromSelected: (name: string) => void
@@ -110,9 +111,19 @@ export function EditorProvider({ children }: { readonly children: ReactNode }): 
   }, [])
 
   // ── Zoom ───────────────────────────────────────────────────────────────────
+  // El tamaño del host se fija en píxeles ya escalados (naturalSize × zoom)
+  // en vez de usar transform: scale() sobre el tamaño natural. Con transform,
+  // algunos navegadores siguen contabilizando el tamaño SIN escalar para el
+  // scroll del contenedor, dejando una barra de scroll fantasma al achicar
+  // una imagen que antes no entraba. Fijar width/height reales evita eso.
   const applyZoom = useCallback(() => {
     const stage = svgHostRef.current
-    if (stage) stage.style.transform = `scale(${zoomRef.current})`
+    const root  = currentRootRef.current
+    if (stage && root) {
+      const { w, h } = naturalSize(root)
+      stage.style.width  = (w * zoomRef.current) + 'px'
+      stage.style.height = (h * zoomRef.current) + 'px'
+    }
     setZoomDisplay(Math.round(zoomRef.current * 100) + '%')
     if (currentSelectionRef.current) {
       requestAnimationFrame(() => {
@@ -147,6 +158,12 @@ export function EditorProvider({ children }: { readonly children: ReactNode }): 
     setSelectionVersion(v => v + 1)
     updateHighlight(node)
   }, [updateHighlight])
+
+  const clearSelection = useCallback(() => {
+    currentSelectionRef.current = null
+    setSelectedNode(null)
+    setHighlightStyle(null)
+  }, [])
 
   // ── Montaje SVG ────────────────────────────────────────────────────────────
   const mountSVG = useCallback((svgEl: Element) => {
@@ -248,6 +265,7 @@ export function EditorProvider({ children }: { readonly children: ReactNode }): 
       if (node === root) {
         root.replaceWith(imported)
         currentRootRef.current = imported
+        applyZoom()
       } else {
         node.replaceWith(imported)
       }
@@ -257,7 +275,7 @@ export function EditorProvider({ children }: { readonly children: ReactNode }): 
     } catch (e) {
       return { error: (e as Error).message }
     }
-  }, [selectNode])
+  }, [selectNode, applyZoom])
 
   // ── Eliminar nodo ─────────────────────────────────────────────────────────
   const deleteSelected = useCallback(() => {
@@ -309,6 +327,7 @@ export function EditorProvider({ children }: { readonly children: ReactNode }): 
     loadSVGString,
     mountSVG,
     selectNode,
+    clearSelection,
     updateHighlight,
     setAttrOnSelected,
     removeAttrFromSelected,
@@ -326,7 +345,7 @@ export function EditorProvider({ children }: { readonly children: ReactNode }): 
   }), [
     selectedNode, zoomDisplay, highlightStyle, treeVersion, selectionVersion, modal,
     closeModal, showAlert, showConfirm, loadSVGString, mountSVG,
-    selectNode, updateHighlight, setAttrOnSelected, removeAttrFromSelected,
+    selectNode, clearSelection, updateHighlight, setAttrOnSelected, removeAttrFromSelected,
     addAttrToSelected, applyRawXML, deleteSelected, downloadSVG,
     zoomIn, zoomOut, fitZoom, addDashAnimation, removeDashAnimation,
   ])

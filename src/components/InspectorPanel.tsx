@@ -235,7 +235,13 @@ export default function InspectorPanel(): React.ReactElement {
   return (
     <aside className="inspector-panel">
       <div className="panel-header">
-        <span className="panel-title">Inspector</span>
+        <span className="panel-header-group">
+          <svg width="10.5" height="10.5" viewBox="0 0 13 13" fill="none">
+            <circle cx="6" cy="6" r="4" stroke="currentColor" strokeWidth="1.5"/>
+            <path d="M9 9l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+          <span className="panel-title">Inspector</span>
+        </span>
       </div>
 
       {!selectedNode ? (

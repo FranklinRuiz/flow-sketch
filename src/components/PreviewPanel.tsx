@@ -9,6 +9,7 @@ export default function PreviewPanel(): React.ReactElement {
     loadSVGString,
     DEFAULT_SVG,
     selectNode,
+    clearSelection,
     updateHighlight,
     currentSelectionRef,
     zoomDisplay,
@@ -54,7 +55,15 @@ export default function PreviewPanel(): React.ReactElement {
     if (!host) return
     const el = pickElementNear(e.clientX, e.clientY, host)
     if (el?.nodeType === 1) selectNode(el)
-  }, [svgHostRef, selectNode])
+    else clearSelection()
+  }, [svgHostRef, selectNode, clearSelection])
+
+  // Clic en el área vacía del lienzo, fuera del dibujo (el clic sobre el
+  // dibujo en sí frena la propagación en handleCanvasClick, así que esto
+  // solo dispara cuando el clic cae fuera de él).
+  const handleViewportClick = useCallback((): void => {
+    clearSelection()
+  }, [clearSelection])
 
   const handleCanvasKey = useCallback((e: React.KeyboardEvent<HTMLButtonElement>): void => {
     if (e.key === 'Escape') e.currentTarget.blur()
@@ -64,13 +73,25 @@ export default function PreviewPanel(): React.ReactElement {
     <section className="preview-panel">
       <div className="preview-toolbar">
         <div className="zoom-group">
-          <button className="zoom-btn" onClick={zoomOut} title="Reducir zoom">−</button>
+          <button className="zoom-btn" onClick={zoomOut} title="Reducir zoom">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6h7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
+          </button>
           <span className="zoom-label">{zoomDisplay}</span>
-          <button className="zoom-btn" onClick={zoomIn}  title="Aumentar zoom">+</button>
+          <button className="zoom-btn" onClick={zoomIn}  title="Aumentar zoom">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2.5v7M2.5 6h7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
+          </button>
         </div>
         <div className="toolbar-sep" />
-        <button className="btn btn-small btn-ghost" onClick={fitZoom}>Ajustar</button>
-        <span className="hint">Clic sobre el dibujo para seleccionar un elemento</span>
+        <button className="btn btn-small btn-ghost" onClick={fitZoom}>
+          <svg width="11" height="11" viewBox="0 0 13 13" fill="none">
+            <path d="M1.5 4.5v-3h3M11.5 4.5v-3h-3M1.5 8.5v3h3M11.5 8.5v3h-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          Ajustar
+        </button>
+        <span className="hint">
+          <svg width="10.5" height="10.5" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1.2"/><path d="M6 5.3v3M6 3.7v.1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>
+          Clic sobre el dibujo para seleccionar un elemento
+        </span>
       </div>
 
       <div
@@ -78,6 +99,7 @@ export default function PreviewPanel(): React.ReactElement {
         ref={previewViewportRef}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
+        onClick={handleViewportClick}
       >
         <button
           type="button"

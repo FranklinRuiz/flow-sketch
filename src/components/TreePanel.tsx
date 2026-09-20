@@ -86,7 +86,12 @@ export default function TreePanel(): React.ReactElement {
   return (
     <aside className="tree-panel">
       <div className="panel-header">
-        <span className="panel-title">Elementos</span>
+        <span className="panel-header-group">
+          <svg width="10.5" height="10.5" viewBox="0 0 13 13" fill="none">
+            <path d="M2 2.5h9M2 6.5h6M2 10.5h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+          <span className="panel-title">Elementos</span>
+        </span>
       </div>
       <div className="tree">
         {root && (
